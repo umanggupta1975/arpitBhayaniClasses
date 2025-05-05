@@ -1,4 +1,4 @@
-package com.umang.arpitBhayaniClasses.Week1;
+package com.system.design.Week1;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

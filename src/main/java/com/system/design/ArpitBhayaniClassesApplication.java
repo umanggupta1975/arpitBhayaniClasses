@@ -1,4 +1,4 @@
-package com.umang.arpitBhayaniClasses;
+package com.system.design;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
