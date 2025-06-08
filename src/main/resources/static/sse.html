@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SSE Java Demo</title>
+</head>
+<body>
+<h1>Server-Sent Events from Spring Boot</h1>
+<div id="output">Waiting...</div>
+
+<script>
+    const output = document.getElementById('output');
+    const evtSource = new EventSource('/events');
+
+    evtSource.onmessage = function(event) {
+      output.innerText = event.data;
+    };
+</script>
+</body>
+</html>

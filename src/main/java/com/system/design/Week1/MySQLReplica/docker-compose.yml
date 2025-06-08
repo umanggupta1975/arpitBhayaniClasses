@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  mysql-source:
+    image: mysql:8.0
+    container_name: mysql-source
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - source_data:/var/lib/mysql
+      - ./init-source:/docker-entrypoint-initdb.d
+    command: >
+      --server-id=1
+      --log-bin=mysql-bin
+      --binlog-format=ROW
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-uroot", "-proot_password"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  mysql-replica:
+    image: mysql:8.0
+    container_name: mysql-replica
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password_replica
+    volumes:
+      - replica_data:/var/lib/mysql
+      - ./init-replica/setup-replication.sh:/docker-entrypoint-initdb.d/setup-replication.sh
+    depends_on:
+      mysql-source:
+        condition: service_healthy
+    command: >
+      --server-id=2
+      --read-only=1
+      --default-authentication-plugin=mysql_native_password
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-uroot", "-proot_password_replica"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  source_data:
+  replica_data:
